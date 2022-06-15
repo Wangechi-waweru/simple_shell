@@ -10,7 +10,7 @@
  */
 void  exit_bul(char **cmd, char *input, char **argv, int c)
 {
-	int statue, j = 0;
+	int statue, i = 0;
 
 	if (cmd[1] == NULL)
 	{
@@ -18,9 +18,9 @@ void  exit_bul(char **cmd, char *input, char **argv, int c)
 		free(cmd);
 		exit(EXIT_SUCCESS);
 	}
-	while (cmd[1][j])
+	while (cmd[1][i])
 	{
-		if (_isalpha(cmd[1][j++]) != 0)
+		if (_isalpha(cmd[1][i++]) != 0)
 		{
 			_prerror(argv, c, cmd);
 			break;
@@ -77,13 +77,13 @@ int change_dir(char **cmd, __attribute__((unused))int er)
  */
 int dis_env(__attribute__((unused)) char **cmd, __attribute__((unused)) int er)
 {
-size_t j;
+size_t i;
 	int len;
 
-	for (j = 0; environ[i] != NULL; j++)
+	for (i = 0; environ[i] != NULL; i++)
 	{
-		len = _strlen(environ[j]);
-		write(1, environ[j], len);
+		len = _strlen(environ[i]);
+		write(1, environ[i], len);
 		write(STDOUT_FILENO, "\n", 1);
 	}
 	return (0);
