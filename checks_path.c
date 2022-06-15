@@ -3,7 +3,10 @@
 /**
  * checkPath - searches $PATH for directory of command
  * @build: input build
+ *
+ * Return: true or false
  */
+
 _Bool checkPath(config *build)
 {
 	register int len;
