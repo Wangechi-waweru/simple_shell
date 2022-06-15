@@ -188,28 +188,4 @@ void freeArgsAndBuffer(config *build);
 void freeArgs(char **args);
 void freeList(linked_l *head);
 
-extern char **environ;
-int init_fileprogram(char **args);
-int init_builtin(char **args, char *buffer, int loops);
-int searchdir(char **command, char **args);
-int execute(char **args);
-int _strlen(char *str);
-int _strncmp(char *s1, char *s2, int n);
-int _strcmp(char *s1, char *s2);
-char *_strdup(char *str);
-char *path_append(char *path, char *command);
-char *_getenv(char *name);
-int getpathfile(char **args);
-void shb_env(void);
-int shb_exit(char **args, char *buffer, int loops);
-void shb_cd(char **args);
-void sighandle(int sign);
-void free_function(int n, ...);
-void errmess(char **argv, char **args, int loops);
-int countarg(char *buffer);
-char **get_tokens(char *buffer);
-void printfnum(int num);
-int _atoi(char *arg);
-int _isdigit(char *number);
-
 #endif
