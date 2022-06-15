@@ -12,7 +12,9 @@
 #include <stdbool.h>
 #include <sys/wait.h>
 #include <unistd.h>
-
+#include <stdarg.h>
+#include <unistd.h>
+#include <string.h>
 /* Errors */
 #define EWSIZE 410
 #define BUFSIZE 256
@@ -20,6 +22,8 @@
 #define ENOSTRING 1106
 #define EILLEGAL 227
 #define ENOBUILTIN 415
+#define DELIMITER " \t\r\n\a"
+#define  _GNU_SOURCE
 
 extern char **environ;
 
