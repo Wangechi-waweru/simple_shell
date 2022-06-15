@@ -1,191 +1,112 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <signal.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <stdarg.h>
-#include <unistd.h>
-#include <string.h>
-/* Errors */
-#define EWSIZE 410
-#define BUFSIZE 256
-#define EBADCD 726
-#define ENOSTRING 1106
-#define EILLEGAL 227
-#define ENOBUILTIN 415
-#define DELIMITER " \t\r\n\a"
-#define  _GNU_SOURCE
+/**###### environ var ######*/
 
 extern char **environ;
 
-/**
- * struct linkedList - linked list data structure
- * @string: environ variable path name
- * @next: pointer to next node
- */
-typedef struct linkedList
-{
-	char *string;
-	struct linkedList *next;
-} linked_l;
+/**##### MACROS ######*/
+
+#define BUFSIZE 1024
+#define DELIM " \t\r\n\a"
+#define PRINTER(c) (write(STDOUT_FILENO, c, _strlen(c)))
+
+/**###### LIBS USED ######*/
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <linux/limits.h>
+
+
+
+
+
+/**###### STRING FUNCTION ######*/
+
+char *_strtok(char *str, const char *tok);
+unsigned int check_delim(char c, const char *str);
+char *_strncpy(char *dest, char *src, int n);
+int _strlen(char *s);
+int _putchar(char c);
+int _atoi(char *s);
+void _puts(char *str);
+int _strcmp(char *s1, char *s2);
+int _isalpha(int c);
+void array_rev(char *arr, int len);
+int intlen(int num);
+char *_itoa(unsigned int n);
+char *_strcat(char *dest, char *src);
+char *_strcpy(char *dest, char *src);
+char *_strchr(char *s, char c);
+int _strncmp(const char *s1, const char *s2, size_t n);
+char *_strdup(char *str);
+
+/**###### MEMORIE  MANGMENT ####*/
+
+void free_env(char **env);
+void *fill_an_array(void *a, int el, unsigned int len);
+char *_memcpy(char *dest, char *src, unsigned int n);
+void *_calloc(unsigned int size);
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+void free_all(char **input, char *line);
+
+/**###### INPUT Function ######*/
+
+void prompt(void);
+void signal_to_handel(int sig);
+char *_getline(void);
+
+/** ###### Command parser and extractor ###*/
+
+int path_cmd(char **line);
+char *_getenv(char *name);
+char **parse_cmd(char *cmd);
+int handle_builtin(char **cmd, int er);
+void read_file(char *filename, char **argv);
+char *build(char *token, char *value);
+int check_builtin(char **cmd);
+void creat_envi(char **envi);
+int check_cmd(char **tokens, char *line, int count, char **argv);
+void treat_file(char *line, int counter, FILE *fd, char **argv);
+void exit_bul_for_file(char **cmd, char *line, FILE *fd);
+
+/** ####BUL FUNC #####*/
+
+void hashtag_handle(char *buff);
+int history(char *input);
+int history_dis(char **cmd, int er);
+int dis_env(char **cmd, int er);
+int change_dir(char **cmd, int er);
+int display_help(char **cmd, int er);
+int echo_bul(char **cmd, int er);
+void  exit_bul(char **cmd, char *input, char **argv, int c);
+int print_echo(char **cmd);
+
+/** ####error handle and Printer ####*/
+void print_number(unsigned int n);
+void print_number_in(int n);
+void print_error(char *line, int c, char **argv);
+void _prerror(char **argv, int c, char **cmd);
+
 
 /**
- * struct configurations - configuration of build settings
- * @env: linked list of local env variables
- * @envList: array of env variables to put into execve
- * @args: array of argument strings
- * @buffer: string buffer of user input
- * @path: array of $PATH locations
- * @fullPath: string of path with correct prepended $PATH
- * @shellName: name of shell (argv[0])
- * @lineCounter: counter of lines users have entered
- * @errorStatus: error status of last child process
+ * struct bulltin - contain bultin to handle and function to excute
+ * @command:pointer to char
+ * @fun:fun to excute when bultin true
  */
-typedef struct configurations
-{
-	linked_l *env;
-	char **envList;
-	char **args;
-	char *buffer;
-	char *path;
-	char *fullPath;
-	char *shellName;
-	unsigned int lineCounter;
-	int errorStatus;
-} config;
 
-/**
- * struct builtInCommands - commands and functions associated with it
- * @command: input command
- * @func: output function
- */
-typedef struct builtInCommands
+typedef struct  bulltin
 {
 	char *command;
-	int (*func)(config *build);
-} type_b;
-
-/* main */
-config *configInit(config *build);
-
-/* built_ins */
-_Bool findBuiltIns(config *build);
-int exitFunc(config *build);
-int historyFunc(config *build);
-int aliasFunc(config *build);
-
-/* cd */
-int cdFunc(config *);
-_Bool cdToHome(config *build);
-_Bool cdToPrevious(config *build);
-_Bool cdToCustom(config *build);
-_Bool updateEnviron(config *build);
-
-/* cd2 */
-int updateOld(config *build);
-_Bool updateCur(config *build, int index);
-
-/* env */
-int envFunc(config *build);
-int setenvFunc(config *build);
-int unsetenvFunc(config *build);
-int _isalpha(int c);
-
-/* help */
-int helpFunc(config *build);
-int displayHelpMenu(void);
-int helpExit(config *build);
-int helpEnv(config *build);
-int helpHistory(config *build);
-
-/* help2 */
-int helpAlias(config *build);
-int helpCd(config *biuld);
-int helpSetenv(config *build);
-int helpUnsetenv(config *build);
-int helpHelp(config *build);
-
-/* built_in_helpers*/
-int countArgs(char **args);
-int _atoi(char *s);
-
-/* shell */
-void shell(config *build);
-void checkAndGetLine(config *build);
-void forkAndExecute(config *build);
-void stripComments(char *str);
-void convertLLtoArr(config *build);
-
-/* _getenv */
-char *_getenv(char *input, char **environ);
-
-/* error_handler */
-void errorHandler(config *build);
-unsigned int countDigits(int num);
-char *itoa(unsigned int num);
-char *getErrorMessage();
-
-/* shell_helpers */
-void insertNullByte(char *str, unsigned int index);
-void displayPrompt(void);
-void displayNewLine(void);
-void sigintHandler(int sigint);
-
-/* check_path */
-_Bool checkPath(config *);
-_Bool checkEdgeCases(config *build);
-
-/* split_string */
-_Bool splitString(config *build);
-unsigned int countWords(char *s);
-_Bool isSpace(char c);
-
-/* string_helpers1 */
-int _strlen(char *s);
-char *_strcat(char *dest, char *src);
-int _strcmp(char *s1, char *s2);
-char *_strdup(char *str);
-char *_strcpy(char *dest, char *src);
-
-/* string_helpers2 */
-char *_strtok(char *str, char *delim);
-int _strcspn(char *string, char *chars);
-char *_strchr(char *s, char c);
-
-/* llfuncs1 */
-linked_l *addNode(linked_l **head, char *str);
-linked_l *addNodeEnd(linked_l **head, char *str);
-size_t printList(const linked_l *h);
-int searchNode(linked_l *head, char *str);
-size_t list_len(linked_l *h);
-
-/* llfuncs2 */
-int deleteNodeAtIndex(linked_l **head, unsigned int index);
-linked_l *generateLinkedList(char **array);
-linked_l *addNodeAtIndex(linked_l **head, int index, char *str);
-char *getNodeAtIndex(linked_l *head, unsigned int index);
-
-/* welcome */
-void welcome_screen_1(void);
-void welcome_screen_2(void);
-
-/* _realloc */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-char *_memcpy(char *dest, char *src, unsigned int n);
-
-/* free */
-void freeMembers(config *build);
-void freeArgsAndBuffer(config *build);
-void freeArgs(char **args);
-void freeList(linked_l *head);
+	int (*fun)(char **line, int er);
+} bul_t;
 
 #endif
