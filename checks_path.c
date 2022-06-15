@@ -3,6 +3,7 @@
 /**
  * checkPath - searches $PATH for directory of command
  * @build: input build
+ * Return: true if found, false if not
  */
 _Bool checkPath(config *build)
 {
